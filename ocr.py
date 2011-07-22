@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+import os
+import fnmatch
 import suds
 import base64
+import time
 
 url="http://www.ocrwebservice.com/services/OCRWebService.asmx?WSDL"
 
@@ -14,9 +17,9 @@ def create_input_image(client, path, filename):
 
 	return input_image
 
-def create_settings(client):
+def create_settings(client, language):
 	settings = client.factory.create("OCRWSSettings")
-	settings.ocrLanguages = [ 'ENGLISH' ]
+	settings.ocrLanguages = [ language ]
 	settings.convertToBW = False
 	settings.outputDocumentFormat = "DOC"
  	settings.createOutputDocument = True
@@ -44,18 +47,27 @@ def handle_response(path, response):
 	else:
 		print response.errorMessage
 
-def main():
+def batch_process_loop(user_name, license_key, src_path, output_path):
 	global url
 
 	client = suds.client.Client(url)
+	settings = create_settings(client, "ENGLISH")
 
+	while True:
+		for filename in os.listdir(src_path):
+    			if fnmatch.fnmatch(filename, '*.pdf'):
+        			if not os.path.exists(output_path + "/" + os.path.splitext(filename)[0] + ".doc"):
+					input_image = create_input_image(client, src_path , filename) 
+					response=client.service.OCRWebServiceRecognize(user_name, license_key, input_image, settings)
+					handle_response(output_path, response)
+		print "Sleeping..."	
+		time.sleep(30)
+
+def main():
 	license_key = read_textline_file(".license")
 	user_name = read_textline_file(".user")
-	input_image = create_input_image(client, "test" , "sample.pdf") 
-	settings = create_settings(client)
 
-	response=client.service.OCRWebServiceRecognize(user_name, license_key, input_image, settings)
-	handle_response("output", response)	
+	batch_process_loop(user_name, license_key, "test", "output") 
 
 if __name__ == "__main__":
 	main()
