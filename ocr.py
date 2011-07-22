@@ -49,12 +49,12 @@ def main():
 
 	client = suds.client.Client(url)
 
-	license = read_textline_file(".license")
-	user = read_textline_file(".user")
+	license_key = read_textline_file(".license")
+	user_name = read_textline_file(".user")
 	input_image = create_input_image(client, "test" , "sample.pdf") 
 	settings = create_settings(client)
 
-	response=client.service.OCRWebServiceRecognize(user, license, input_image, settings)
+	response=client.service.OCRWebServiceRecognize(user_name, license_key, input_image, settings)
 	handle_response("output", response)	
 
 if __name__ == "__main__":
