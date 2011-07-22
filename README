@@ -1,0 +1,8 @@
+Copyright (C) 2011 <tomi.tirri@gmail.com>
+
+Helper script for batch processing PDF-documents on Online OCR OCR Web Service.
+
+TODO:
+=====
+o convert all files in source folder
+o cleanups
