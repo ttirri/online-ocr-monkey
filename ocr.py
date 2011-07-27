@@ -21,7 +21,7 @@ def create_settings(client, language):
 	settings = client.factory.create("OCRWSSettings")
 	settings.ocrLanguages = [ language ]
 	settings.convertToBW = False
-	settings.outputDocumentFormat = "DOC"
+	settings.outputDocumentFormat = "PDF"
  	settings.createOutputDocument = True
 	settings.getOCRText = True
  	settings.multiPageDoc = True
@@ -51,12 +51,12 @@ def batch_process_loop(user_name, license_key, src_path, output_path):
 	global url
 
 	client = suds.client.Client(url)
-	settings = create_settings(client, "ENGLISH")
+	settings = create_settings(client, "FINNISH")
 
 	while True:
 		for filename in os.listdir(src_path):
     			if fnmatch.fnmatch(filename, '*.pdf'):
-        			if not os.path.exists(output_path + "/" + os.path.splitext(filename)[0] + ".doc"):
+        			if not os.path.exists(output_path + "/" + os.path.splitext(filename)[0] + ".pdf"):
 					input_image = create_input_image(client, src_path , filename) 
 					response=client.service.OCRWebServiceRecognize(user_name, license_key, input_image, settings)
 					handle_response(output_path, response)
