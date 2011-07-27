@@ -2,7 +2,14 @@ Copyright (C) 2011 <tomi.tirri@gmail.com>
 
 Helper script for batch processing PDF-documents on Online OCR OCR Web Service.
 
-TODO:
-=====
-o convert all files in source folder
-o cleanups
+Currently source files should be PDF-format and output is in PDF-format.
+
+Web Service itself supports other source and output formats also.
+
+How to use:
+===========
+1. Create a file ".user", which contains Online OCR Web Service user account
+2. Create a file ".license", which contains Online OCR Web Service license key
+3. Copy files to be OCR-processed to the test-folder.
+4. Run ocr.py
+5. Result PDFs will appear in output-folder. 
