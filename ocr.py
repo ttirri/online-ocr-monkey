@@ -53,15 +53,23 @@ def batch_process_loop(user_name, license_key, src_path, output_path):
 	client = suds.client.Client(url)
 	settings = create_settings(client, "FINNISH")
 
+	
 	while True:
-		for filename in os.listdir(src_path):
-    			if fnmatch.fnmatch(filename, '*.pdf'):
-        			if not os.path.exists(output_path + "/" + os.path.splitext(filename)[0] + ".pdf"):
-					input_image = create_input_image(client, src_path , filename) 
-					response=client.service.OCRWebServiceRecognize(user_name, license_key, input_image, settings)
-					handle_response(output_path, response)
-		print "Sleeping..."	
-		time.sleep(30)
+		try:
+			for filename in os.listdir(src_path):
+    				if fnmatch.fnmatch(filename, '*.pdf'):
+        				if not os.path.exists(output_path + "/" + os.path.splitext(filename)[0] + ".pdf"):
+						input_image = create_input_image(client, src_path , filename) 
+						response=client.service.OCRWebServiceRecognize(user_name, license_key, input_image, settings)
+						handle_response(output_path, response)
+			print "Sleeping..."	
+			time.sleep(30)
+		except URLError as urlError:
+			print urlError
+			pass
+		except:
+			print "Unexpected error:", sys.exc_info()[0]
+			raise
 
 def main():
 	license_key = read_textline_file(".license")
