@@ -4,6 +4,8 @@ import fnmatch
 import suds
 import base64
 import time
+import urllib2
+import sys
 
 url="http://www.ocrwebservice.com/services/OCRWebService.asmx?WSDL"
 
@@ -64,7 +66,7 @@ def batch_process_loop(user_name, license_key, src_path, output_path):
 						handle_response(output_path, response)
 			print "Sleeping..."	
 			time.sleep(30)
-		except URLError as urlError:
+		except urllib2.URLError as urlError:
 			print urlError
 			pass
 		except:
